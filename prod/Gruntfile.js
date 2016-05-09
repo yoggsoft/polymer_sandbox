@@ -3,7 +3,6 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
     /*
     uglify Task 
     */
@@ -31,17 +30,60 @@ module.exports = function(grunt) {
           '../deploy/index.html' : ['index.html']
         }
       }
+    }, 
+
+    /*
+    sass Task 
+    */
+    sass: {
+      dev : {
+        options : {
+          style: 'expanded',
+          sourcemap:'none'
+        },
+        files : {
+          '../deploy/css/style.min.css' : 'sass/style.scss'
+        }
+      },
+      dist : {
+        options : {
+          style: 'compressed',
+          sourcemap:'none'
+        },
+        files : {
+          '../deploy/css/style.min.css' : 'sass/style.scss'
+        }
+      }
+    },
+
+    /*
+    Watch Task 
+    */
+    watch: {
+      css:{
+        files:'sass/*.scss',
+        tasks: ['sass']
+      },
+      html:{
+        files:'*.html',
+        tasks: ['htmlmin']
+      },
+      js:{
+        files:'js/*.js',
+        tasks: ['uglify']
+      }
     }
+
 
   });
 
-
   // Load the plugin that provides the "watch" task.
-  //grunt.loadNpmTasks('grunt-contrib-watch');
+  
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-  // Default task(s).
-  //grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default',['watch']);
 
 };
